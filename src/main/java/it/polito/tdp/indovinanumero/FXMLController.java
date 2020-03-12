@@ -1,4 +1,4 @@
-package it.polito.tdp.indivinanumero;
+package it.polito.tdp.indovinanumero;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,7 +44,7 @@ public class FXMLController {
     @FXML
     void doNuova(ActionEvent event) {
     	//gestione inizio nuova partita
-    	this.segreto = (int)(Math.random()*NMAX);
+    	this.segreto = (int)(Math.random()*NMAX) + 1;
     	this.tentativiFatti = 0;
     	this.inGioco=true;
     	
@@ -57,7 +57,40 @@ public class FXMLController {
 
     @FXML
     void doTentativo(ActionEvent event) {
-
+    	//leggere input utente
+    	String ts = txtTentativi.getText();
+    	int tentativo;
+    	try { //controllo che input sia un numero e non altro
+    		tentativo = Integer.parseInt(ts);
+    	}catch (NumberFormatException e) {
+    		txtRisultato.appendText("devi inserire un numero!");
+    		return;
+    	}
+    	this.tentativiFatti++;
+    	
+    	if(tentativo==this.segreto) {
+    		//HO INDOVINATO
+    		txtRisultato.appendText("HAI VINTO!! Hai utilizzato "+this.tentativiFatti+" tentativi");
+    		layoutTentativo.setDisable(true);
+    		this.inGioco = false;
+    		return;
+    	}
+    	
+    	if(tentativiFatti == TMAX) {
+    		//ho esaurito i tentativi
+    		txtRisultato.appendText("Hai perso! Hai utilizzato "+this.tentativiFatti+" tentativi");
+    		layoutTentativo.setDisable(true);
+    		this.inGioco = false;
+    		return;
+    	}
+    	
+    	//Informare utente se tentativo è troppo alto o troppo basso
+    	if(tentativo < this.segreto)
+    		txtRisultato.appendText("Tentativo troppo basso");
+    	else
+    		txtRisultato.appendText("Tentativo troppo alto");
+    	
+    	txtRimasti.setText(Integer.toString(TMAX-tentativiFatti));
     }
 
     @FXML
